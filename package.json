@@ -13,7 +13,16 @@
   "author": "Roshan Sshikhare",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-loader": "^9.2.1",
     "terser-webpack-plugin": "^5.3.10",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead",
+    "not IE 11"
+  ]
 }

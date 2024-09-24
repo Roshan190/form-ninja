@@ -8,7 +8,7 @@ module.exports = ({ mode }) => {
     target: ["browserslist"],
     stats: "errors-warnings",
     mode: "production", // Ensure production mode is set for optimizations
-    entry: "./src/index.js", // Assuming your entry point is in `src/index.js`
+    entry: "./index.js", // Assuming your entry point is in `src/index.js`
     output: {
       filename: "form-validator.min.js", // Minified output file name
       path: path.resolve(__dirname, "dist"), // Use `dist` for distribution builds

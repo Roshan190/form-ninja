@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="module" src="../main.js"></script>
+    <script src="../dist/form-validator.min.js"></script>
   </head>
 
   <body>
@@ -101,9 +101,7 @@
       <button type="submit">Submit</button>
     </form>
 
-    <script type="module">
-      import FormNinja from "../main.js";
-
+    <script>
       function isValidDate(d) {
         return d instanceof Date && !isNaN(d);
       }
