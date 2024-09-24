@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="module" src="../main.js"></script>
+  </head>
+
+  <body>
+    <form id="user-form">
+      <div form-group="name" class="form-group">
+        <label for="name">Enter your name</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter your name"
+          name="name"
+          id="name"
+          data-required
+          data-required-message="field can't be empty."
+          data-control-name="name"
+          data-pattern="^[a-zA-Z]+(?: [a-zA-Z]+)+$"
+          data-max-length="10"
+        />
+        <p style="color: red" error-message="name"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Enter your email</label>
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Enter your email"
+          name="email"
+          id="email"
+          data-required
+          data-max-length="10"
+          data-control-name="email"
+          data-pattern="^[\w.-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$"
+        />
+        <p style="color: red" error-message="email"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Enter your date of birth</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter your date of birth"
+          name="dateOfBirth"
+          id="dateOfBirth"
+          data-control-name="dateOfBirth"
+          data-required
+          data-validate-date-of-birth
+        />
+        <p style="color: red" error-message="dateOfBirth"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="">Please select the gender</label>
+        <input
+          type="radio"
+          class="form-control"
+          name="gender"
+          data-control-name="gender"
+          data-required
+          value="male"
+        />
+        <input type="radio" class="form-control" name="gender" value="female" />
+        <p style="color: red" error-message="gender"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="disclaimer">Please select the disclaimer</label>
+        <input
+          type="checkbox"
+          class="form-control"
+          name="disclaimer"
+          id="disclaimer"
+          data-control-name="disclaimer"
+          data-required-true
+        />
+
+        <p style="color: red" error-message="disclaimer"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="disclaimer">Select file</label>
+        <input
+          type="file"
+          class="form-control"
+          name="photo"
+          id="photo"
+          multiple
+          data-control-name="photo"
+        />
+        <p style="color: red" error-message="photo"></p>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script type="module">
+      import FormNinja from "../main.js";
+
+      function isValidDate(d) {
+        return d instanceof Date && !isNaN(d);
+      }
+
+      function validateDateOfBirth(value) {
+        const date = new Date(value);
+
+        const status = isValidDate(date);
+
+        if (status) return;
+
+        return { message: "Please enter valid date.", value };
+      }
+
+      const userForm = new FormNinja("#user-form", {
+        validate: {
+          validateDateOfBirth,
+        },
+      });
+
+      window.userForm = userForm;
+    </script>
+  </body>
+</html>
