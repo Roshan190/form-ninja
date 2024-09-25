@@ -9,75 +9,84 @@
 
   <body>
     <form id="user-form">
-      <div form-group="name" class="form-group">
-        <label for="name">Enter your name</label>
+      <div form-group="fullName">
+        <label for="fullNameId">Enter your name</label>
         <input
           type="text"
-          class="form-control"
-          placeholder="Enter your name"
-          name="name"
-          id="name"
+          placeholder="Enter your full name"
+          name="fullName"
+          id="fullNameId"
           data-required
-          data-required-message="field can't be empty."
-          data-control-name="name"
+          data-required-message="Name can not be empty."
+          data-control-name="fullName"
           data-pattern="^[a-zA-Z]+(?: [a-zA-Z]+)+$"
-          data-max-length="10"
         />
         <p style="color: red" error-message="name"></p>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="email">Enter your email</label>
         <input
           type="email"
-          class="form-control"
           placeholder="Enter your email"
           name="email"
           id="email"
           data-required
-          data-max-length="10"
           data-control-name="email"
           data-pattern="^[\w.-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$"
         />
         <p style="color: red" error-message="email"></p>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="email">Enter your date of birth</label>
         <input
           type="text"
-          class="form-control"
           placeholder="Enter your date of birth"
           name="dateOfBirth"
-          id="dateOfBirth"
+          id="dateOfBirthId"
           data-control-name="dateOfBirth"
           data-required
-          data-validate-date-of-birth
+          data-is-valid-date
         />
         <p style="color: red" error-message="dateOfBirth"></p>
       </div>
 
-      <div class="form-group">
-        <label for="">Please select the gender</label>
-        <input
-          type="radio"
-          class="form-control"
-          name="gender"
-          data-control-name="gender"
-          data-required
-          value="male"
-        />
-        <input type="radio" class="form-control" name="gender" value="female" />
+      <div>
+        <p>Please select the gender</p>
+        <div>
+          <label>
+            Male
+            <input
+              type="radio"
+              class="form-control"
+              name="gender"
+              data-control-name="gender"
+              data-required
+              value="male"
+            />
+          </label>
+
+          <label>
+            Female
+            <input
+              type="radio"
+              class="form-control"
+              name="gender"
+              value="female"
+            />
+          </label>
+        </div>
+
         <p style="color: red" error-message="gender"></p>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="disclaimer">Please select the disclaimer</label>
         <input
           type="checkbox"
-          class="form-control"
           name="disclaimer"
-          id="disclaimer"
+          id="disclaimerId"
           data-control-name="disclaimer"
           data-required-true
         />
@@ -85,44 +94,37 @@
         <p style="color: red" error-message="disclaimer"></p>
       </div>
 
-      <div class="form-group">
-        <label for="disclaimer">Select file</label>
-        <input
-          type="file"
-          class="form-control"
-          name="photo"
-          id="photo"
-          multiple
-          data-control-name="photo"
-        />
-        <p style="color: red" error-message="photo"></p>
-      </div>
-
       <button type="submit">Submit</button>
     </form>
 
     <script>
-      function isValidDate(d) {
-        return d instanceof Date && !isNaN(d);
-      }
-
-      function validateDateOfBirth(value) {
+      function isValidDate(value) {
         const date = new Date(value);
 
-        const status = isValidDate(date);
+        const status = d instanceof Date && !isNaN(date);
 
         if (status) return;
 
         return { message: "Please enter valid date.", value };
       }
 
-      const userForm = new FormNinja("#user-form", {
+      const form = new FormNinja("#user-form", {
         validate: {
-          validateDateOfBirth,
+          isValidDate,
         },
       });
 
-      window.userForm = userForm;
+      const USER_FORM = document.getElementById("user-form");
+
+      USER_FORM.addEventListener("submit", (e) => {
+        form.trigger();
+
+        if (form.isValid) {
+          alert("Form submitted successfully!");
+        } else {
+          alert("Form has errors. Please correct them.");
+        }
+      });
     </script>
   </body>
 </html>
