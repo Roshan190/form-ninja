@@ -62,7 +62,7 @@ export function generateValue({ field, form }) {
       return getRadioValue({ form, controlName }); // Return selected radio value
 
     case "checkbox":
-      return getCheckboxValue({ form, controlName }); // Return selected checkbox value(s)
+      return getCheckboxValue({ form, controlName: controlName || "" }); // Return selected checkbox value(s)
 
     case "file":
       return getFiles({ form, controlName }); // Return selected files
