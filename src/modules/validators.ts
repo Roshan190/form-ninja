@@ -7,7 +7,7 @@ export default class Validators {
    * @returns {number} - The converted number or 0 if conversion fails.
    * @private
    */
-  static #toNumber(value) {
+  static #toNumber(value: string | number) {
     switch (typeof value) {
       case "string":
         return parseInt(value.replace(/[^\d.-]+/g, ""));
@@ -25,7 +25,7 @@ export default class Validators {
    * @param {string} value - The value to validate.
    * @returns {object | undefined} - An error object if the value is empty; otherwise, undefined.
    */
-  static required(value) {
+  static required(value: string) {
     const status = value.trim() !== "";
 
     if (status) return;
@@ -38,7 +38,7 @@ export default class Validators {
    * @param {boolean} value - The value to validate.
    * @returns {object | undefined} - An error object if the value is false; otherwise, undefined.
    */
-  static requiredTrue(value) {
+  static requiredTrue(value: boolean) {
     if (value) return;
 
     return { message: "You must check this box to proceed." };
@@ -50,7 +50,7 @@ export default class Validators {
    * @param {string} regex - The regex pattern to match against.
    * @returns {object | undefined} - An error object if the value does not match; otherwise, undefined.
    */
-  static pattern(value, regex) {
+  static pattern(value: string, regex: string) {
     const regexPattern = new RegExp(regex);
     const status = regexPattern.test(value);
 
@@ -69,7 +69,7 @@ export default class Validators {
    * @param {number} min - The minimum acceptable value.
    * @returns {object | undefined} - An error object if the value is less than min; otherwise, undefined.
    */
-  static min(value, min) {
+  static min(value: string | number, min: number) {
     const NUMBER = this.#toNumber(value);
     const status = NUMBER >= min;
 
@@ -88,7 +88,7 @@ export default class Validators {
    * @param {number} max - The maximum acceptable value.
    * @returns {object | undefined} - An error object if the value is greater than max; otherwise, undefined.
    */
-  static max(value, max) {
+  static max(value: string | number, max: number) {
     const NUMBER = this.#toNumber(value);
     const status = NUMBER <= max;
 
@@ -107,7 +107,7 @@ export default class Validators {
    * @param {number} minLength - The minimum acceptable length.
    * @returns {object | undefined} - An error object if the length is less than minLength; otherwise, undefined.
    */
-  static minLength(value, minLength) {
+  static minLength(value: string, minLength: number) {
     const status = value.length >= minLength;
 
     if (status) return;
@@ -125,7 +125,7 @@ export default class Validators {
    * @param {number} maxLength - The maximum acceptable length.
    * @returns {object | undefined} - An error object if the length exceeds maxLength; otherwise, undefined.
    */
-  static maxLength(value, maxLength) {
+  static maxLength(value: string, maxLength: number) {
     const status = value.length <= maxLength;
 
     if (status) return;

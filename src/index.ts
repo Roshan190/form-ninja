@@ -1,2 +1,1 @@
-// @ts-ignore
-export * from "./modules/form-ninja.js";
+export * from "./modules/form-ninja";

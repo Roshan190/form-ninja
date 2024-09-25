@@ -1,13 +1,14 @@
-import { generateError, hideError, showError } from "./services/error.js";
-import { isVisible } from "./services/helper.js";
-import { generateValue } from "./services/value.js";
+import { generateError, hideError, showError } from "../services/error";
+import { isVisible } from "../services/helper";
+import { generateValue } from "../services/value";
+import { FormNinjaConfig, SetValueConfig } from "../types";
 
-export default class FormNinja {
-  form = document.createElement("form");
+export class FormNinja {
+  form!: HTMLElement;
   errors = {}; // Holds validation errors for each field.
   validations = {}; // Stores custom validation rules.
 
-  constructor(query, config) {
+  constructor(query: string, config: FormNinjaConfig) {
     this.initialize(query, config);
   }
 
@@ -16,7 +17,7 @@ export default class FormNinja {
    * @param {string} query - The selector for the form element.
    * @param {object} config - Configuration object containing validation rules.
    */
-  initialize(query, config) {
+  initialize(query: string, config: FormNinjaConfig) {
     const FORM_ELEMENT = document.querySelector(query);
 
     // Ensure the selected element is a valid HTML element.
@@ -47,16 +48,16 @@ export default class FormNinja {
    * Resets the value of a single form field.
    * @param {string|HTMLElement} control - The name of the form field or the field element to reset.
    */
-  resetField(control) {
-    let field;
+  resetField(control: string | Element) {
+    let field!: HTMLFormElement;
 
     // Check if control is a string (field name) and get the corresponding field element
     if (typeof control === "string") {
-      field = this.getField(control);
+      field = this.getField(control) as HTMLFormElement;
     }
     // If control is an HTMLElement, use it directly
     else if (control instanceof HTMLElement) {
-      field = control;
+      field = control as HTMLFormElement;
     }
 
     // Exit early if the field is not found
@@ -72,10 +73,12 @@ export default class FormNinja {
     }
 
     // Hide error for the specified field
-    hideError({
-      controlName: dataset.controlName,
-      form: this.form,
-    });
+    if (dataset.controlName) {
+      hideError({
+        controlName: dataset.controlName,
+        form: this.form as HTMLFormElement,
+      });
+    }
   }
 
   /**
@@ -85,8 +88,8 @@ export default class FormNinja {
    * @param {Object} [config] - Optional configuration for setting the value.
    * @param {boolean} [config.shouldValidate=false] - If true, the form should be validated after setting the value.
    */
-  setValue(name, value, config = {}) {
-    const field = this.getField(name);
+  setValue(name: string, value: any, config: SetValueConfig) {
+    const field = this.getField(name) as HTMLFormElement;
 
     // Exit early if the field is not found
     if (!field) return;
@@ -111,7 +114,7 @@ export default class FormNinja {
    * @param {Object} values - Key-value pairs representing the form field names and their new values.
    * @param {Object} [config] - Optional configuration object for updating the form (e.g., validation or UI options).
    */
-  update(values, config) {
+  update(values: { [key: string]: any }, config: SetValueConfig) {
     for (const controlName in values) {
       this.setValue(controlName, values[controlName], config);
     }
@@ -130,7 +133,7 @@ export default class FormNinja {
    * @param {string} controlName - The name of the control to retrieve.
    * @returns {HTMLElement | undefined} - The field DOM element or undefined if not found.
    */
-  getField(controlName) {
+  getField(controlName: string) {
     const fieldDOM = this.form.querySelector(
       `[data-control-name="${controlName}"]`
     );
@@ -150,19 +153,24 @@ export default class FormNinja {
    */
   getValues(controlName = null) {
     if (controlName) {
-      const field = this.getField(controlName);
+      const field = this.getField(controlName) as HTMLFormElement;
 
       // Exit early if the field is not found
       if (!field) return;
 
-      return generateValue({ field, form: this.form });
+      return generateValue({ field, form: this.form as HTMLFormElement });
     }
 
-    const values = {};
-    this.fields.forEach((field) => {
-      const dataset = field.dataset;
+    const values: any = {};
+    (this.fields as NodeListOf<HTMLFormElement>).forEach((field) => {
+      const { controlName } = field.dataset;
 
-      values[dataset.controlName] = generateValue({ field, form: this.form });
+      if (controlName) {
+        values[controlName] = generateValue({
+          field,
+          form: this.form as HTMLFormElement,
+        });
+      }
     });
 
     return values;
@@ -185,7 +193,7 @@ export default class FormNinja {
    * Iterates over each field and calls validateField on it.
    */
   validate() {
-    this.fields.forEach((field) => {
+    (this.fields as NodeListOf<HTMLFormElement>).forEach((field) => {
       this.validateField(field); // Validate each field.
     });
   }
@@ -196,18 +204,21 @@ export default class FormNinja {
    * @param {HTMLElement} field - The form field element to validate.
    * @returns {Promise} - A Promise that resolves if the field is valid or rejects with validation errors.
    */
-  validateField(field) {
+  validateField(field: HTMLFormElement) {
     // Get dataset attributes and field value
     const { dataset = {} } = field;
-    let value = generateValue({ field, form: this.form });
+    let value = generateValue({ field, form: this.form as HTMLFormElement });
 
     // Check if the field is disabled or hidden
     const isFieldDisabledOrHidden =
       field.disabled || dataset.disabled === "true" || !isVisible(field);
 
     // If the field is disabled or hidden, clear any existing errors and skip validation
-    if (isFieldDisabledOrHidden) {
-      hideError({ controlName: dataset.controlName, form: this.form });
+    if (isFieldDisabledOrHidden && dataset.controlName) {
+      hideError({
+        controlName: dataset.controlName,
+        form: this.form as HTMLFormElement,
+      });
       return;
     }
 
@@ -219,14 +230,20 @@ export default class FormNinja {
     });
 
     // Show or hide the error based on validation result
+
+    if (!dataset.controlName) return;
+
     if (error) {
       showError({
         message: error.message,
         controlName: dataset.controlName,
-        form: this.form,
+        form: this.form as HTMLFormElement,
       });
     } else {
-      hideError({ controlName: dataset.controlName, form: this.form });
+      hideError({
+        controlName: dataset.controlName,
+        form: this.form as HTMLFormElement,
+      });
     }
   }
 
@@ -239,7 +256,7 @@ export default class FormNinja {
    */
   trigger(controlName = null) {
     if (controlName) {
-      const field = this.getField(controlName);
+      const field = this.getField(controlName) as HTMLFormElement;
 
       // If the field is not found, exit early.
       if (!field) return;

@@ -1,5 +1,6 @@
-import { BUILT_IN_VALIDATORS } from "../constants/index.js";
-import Validators from "../modules/validators.js";
+import { BUILT_IN_VALIDATORS } from "../constants/index";
+import Validators from "../modules/validators";
+import { ValidatorFunction } from "../types";
 
 /**
  * Generates an error object based on the provided dataset and validations.
@@ -8,26 +9,43 @@ import Validators from "../modules/validators.js";
  * @param {any} value - Represents any input value provided by the user.
  * @returns {object | null} - Returns an object with an error message, or null if there are no errors.
  */
-export function generateError({ dataset, validations, value }) {
+export function generateError({
+  dataset,
+  validations,
+  value,
+}: {
+  dataset: any;
+  validations: {
+    [key: string]: () => { message: string };
+  };
+  value: any;
+}) {
   for (const validator in dataset) {
     const attributeValue = dataset[validator];
 
     // Check if the validator is a built-in validator
     if (BUILT_IN_VALIDATORS.includes(validator)) {
-      const error = Validators[validator](value, attributeValue);
+      const validatorFunction = Validators[
+        validator as keyof typeof Validators
+      ] as ValidatorFunction;
 
-      if (error) {
-        // Use a custom error message if provided
-        const customErrorMessage = dataset[validator + "Message"];
-        if (customErrorMessage) {
-          error.message = customErrorMessage;
+      if (typeof validatorFunction === "function") {
+        const error = validatorFunction(value, attributeValue);
+        if (error) {
+          // Use a custom error message if provided
+          const customErrorMessage = dataset[validator + "Message"];
+          if (customErrorMessage) {
+            error.message = customErrorMessage;
+          }
+          return error; // Return the generated error
         }
-        return error; // Return the generated error
       }
     }
     // Check if the validator is a custom validation
     else if (validator in validations) {
-      const error = validations[validator](value, attributeValue);
+      const validatorFunction = validations[validator] as ValidatorFunction;
+
+      const error = validatorFunction(value, attributeValue);
 
       if (error) {
         // Use a custom error message if provided
@@ -51,7 +69,15 @@ export function generateError({ dataset, validations, value }) {
  * @param {string} controlName - The name of the form field to display the error for.
  * @param {HTMLElement} form - The form element that contains the field.
  */
-export function showError({ message, controlName, form }) {
+export function showError({
+  message,
+  controlName,
+  form,
+}: {
+  message: string;
+  controlName: string;
+  form: HTMLFormElement;
+}) {
   // Select the error message element associated with the control name
 
   try {
@@ -76,7 +102,13 @@ export function showError({ message, controlName, form }) {
  * @param {string} controlName - The name of the form field to hide the error message for.
  * @param {HTMLElement} form - The form element that contains the field.
  */
-export function hideError({ controlName, form }) {
+export function hideError({
+  controlName,
+  form,
+}: {
+  controlName: string;
+  form: HTMLFormElement;
+}) {
   try {
     removeInvalidClass({ controlName, form });
 
@@ -95,7 +127,13 @@ export function hideError({ controlName, form }) {
   }
 }
 
-export function addInvalidClass({ controlName, form }) {
+export function addInvalidClass({
+  controlName,
+  form,
+}: {
+  controlName: string;
+  form: HTMLFormElement;
+}) {
   const formGroupDOM = form.querySelector(`[form-group='${controlName}']`);
   const fieldControlEL = form.querySelector(
     `[data-control-name='${controlName}']`
@@ -110,7 +148,13 @@ export function addInvalidClass({ controlName, form }) {
   }
 }
 
-export function removeInvalidClass({ controlName, form }) {
+export function removeInvalidClass({
+  controlName,
+  form,
+}: {
+  controlName: string;
+  form: HTMLFormElement;
+}) {
   const formGroupDOM = form.querySelector(`[form-group='${controlName}']`);
   const fieldControlEL = form.querySelector(
     `[data-control-name='${controlName}']`

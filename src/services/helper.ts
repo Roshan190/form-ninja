@@ -3,7 +3,7 @@
  * @param {HTMLElement} element - The DOM element to check visibility for.
  * @returns {boolean} - Returns true if the element is visible, false otherwise.
  */
-export function isVisible(element) {
+export function isVisible(element: HTMLElement) {
   if (!element || !(element instanceof HTMLElement)) {
     return false; // Invalid element or not in DOM
   }
