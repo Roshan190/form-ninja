@@ -24,7 +24,7 @@ npm install form-ninja
 Or using yarn:
 
 ```bash
-yarn add form-validator
+yarn add form-ninja
 ```
 
 ## Usage
