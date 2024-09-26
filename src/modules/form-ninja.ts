@@ -5,7 +5,6 @@ import { FormNinjaConfig, SetValueConfig } from "../types";
 
 export class FormNinja {
   form!: HTMLElement;
-  errors = {}; // Holds validation errors for each field.
   validations = {}; // Stores custom validation rules.
 
   constructor(query: string, config: FormNinjaConfig) {
@@ -88,7 +87,7 @@ export class FormNinja {
    * @param {Object} [config] - Optional configuration for setting the value.
    * @param {boolean} [config.shouldValidate=false] - If true, the form should be validated after setting the value.
    */
-  setValue(name: string, value: any, config: SetValueConfig) {
+  setValue(name: string, value: any, config?: SetValueConfig) {
     const field = this.getField(name) as HTMLFormElement;
 
     // Exit early if the field is not found
@@ -104,7 +103,7 @@ export class FormNinja {
     }
 
     // Validate the field if shouldValidate is true
-    if (config.shouldValidate) {
+    if (config?.shouldValidate) {
       this.validateField(field);
     }
   }
@@ -186,6 +185,39 @@ export class FormNinja {
       }
     }
     return true; // All fields are valid
+  }
+
+  /**
+   * Return an error object containing all the errors.
+   */
+  get errors() {
+    const _errors: any = {};
+
+    (this.fields as NodeListOf<HTMLFormElement>).forEach((field) => {
+      // Get dataset attributes and field value
+      const { dataset = {} } = field;
+
+      let value = generateValue({ field, form: this.form as HTMLFormElement });
+
+      // Check if the field is disabled or hidden
+      const isFieldDisabledOrHidden =
+        field.disabled || dataset.disabled === "true" || !isVisible(field);
+
+      if (!isFieldDisabledOrHidden && dataset.controlName) {
+        // Generate any validation errors
+        const error = generateError({
+          dataset,
+          validations: this.validations,
+          value,
+        });
+
+        if (error) {
+          _errors[dataset.controlName] = error;
+        }
+      }
+    });
+
+    return _errors;
   }
 
   /**

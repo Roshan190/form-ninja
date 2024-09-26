@@ -27,6 +27,23 @@ Or using yarn:
 yarn add form-ninja
 ```
 
+### Browser
+
+#### Script tag
+
+To install latest version
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/form-ninja/dist/form-ninja.min.js"></script>
+```
+
+To install specific version
+example - `https://cdn.jsdelivr.net/npm/form-ninja@1.0.5/dist/form-ninja.min.js`
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/form-ninja@ <-version-> /dist/form-ninja.min.js"></script>
+```
+
 ## Usage
 
 Import the `FormNinja` and use it to validate your form fields.

@@ -1,16 +1,17 @@
 {
   "name": "form-ninja",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Form Ninja is a lightweight, fast, and flexible JavaScript library for efficient form validation. It supports custom rules, error handling, and various input types like checkboxes, radio buttons, and file uploads. Designed for quick integration, it simplifies form validation with minimal configuration.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "homepage": "https://goole.com",
+  "homepage": "https://www.npmjs.com/package/form-ninja",
   "repository": {
     "url": "https://github.com/Roshan190/form-ninja"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup && npm run build:browser",
+    "build:browser": "webpack --config webpack.config.js"
   },
   "author": "Roshan Sshikhare",
   "license": "MIT",
@@ -20,8 +21,10 @@
     "babel-loader": "^9.2.1",
     "rimraf": "^6.0.1",
     "terser-webpack-plugin": "^5.3.10",
+    "ts-loader": "^9.5.1",
     "tsup": "^8.3.0",
     "typescript": "^5.6.2",
+    "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4"
   },
   "browserslist": [
@@ -31,6 +34,8 @@
     "not IE 11"
   ],
   "keywords": [
+    "form-ninja",
+    "ninja",
     "javascript",
     "form",
     "forms",
