@@ -1,3 +1,9 @@
+<div align="center">
+        <a href="https://github.com/Roshan190/form-ninja" title="Form Ninja - Simple forms validation">
+            <img width="300" height="300" src="./src/images/form-ninja-logo.webp" alt="Form Ninja Logo - lightweight, easy-to-use JavaScript library for validating forms" />
+        </a>
+</div>
+
 # Form Ninja
 
 [![npm version](https://img.shields.io/npm/v/form-ninja.svg)](https://www.npmjs.com/package/form-ninja)
