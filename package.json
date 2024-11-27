@@ -13,7 +13,7 @@
     "build": "tsup && npm run build:browser",
     "build:browser": "webpack --config webpack.config.js"
   },
-  "author": "Roshan Sshikhare",
+  "author": "Roshan Shikhare",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.25.2",

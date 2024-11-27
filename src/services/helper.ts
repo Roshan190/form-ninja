@@ -13,7 +13,6 @@ export function isVisible(element: HTMLElement) {
   return (
     style.display !== "none" && // Element is not hidden via `display: none`
     style.visibility !== "hidden" && // Element is not hidden via `visibility: hidden`
-    style.opacity !== "0" && // Element is not fully transparent
     element.offsetParent !== null // Element is part of the document layout (not `position: fixed` or `absolute` and outside the viewport)
   );
 }

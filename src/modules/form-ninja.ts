@@ -179,12 +179,10 @@ export class FormNinja {
    * Returns whether the form is valid.
    */
   get isValid() {
-    for (const field of this.fields) {
-      if (field.classList.contains("rf-invalid")) {
-        return false; // Return early if an invalid field is found
-      }
+    if (Object.keys(this.errors).length) {
+      return false;
     }
-    return true; // All fields are valid
+    return true;
   }
 
   /**
